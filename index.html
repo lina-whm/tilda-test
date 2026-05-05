@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tilda Test - Zero Block Tasks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        .spacer {
+            height: 50vh;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spacer h2 {
+            font-size: clamp(24px, 4vw, 48px);
+            font-weight: 300;
+            opacity: 0.3;
+        }
+
+        /* TASK 1: Sticky + Step-by-Step */
+        .task1-container {
+            height: 300vh;
+            position: relative;
+        }
+
+        .task1-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .task1-left {
+            width: 50%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: clamp(20px, 5vw, 80px);
+            background: #0d0d0d;
+        }
+
+        .task1-right {
+            width: 50%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: #111;
+        }
+
+        .task1-title {
+            font-size: clamp(28px, 5vw, 64px);
+            font-weight: 700;
+            margin-bottom: clamp(30px, 6vw, 60px);
+            opacity: 0.2;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            transform: translateX(-20px);
+            color: #888;
+        }
+
+        .task1-title.active {
+            opacity: 1;
+            transform: translateX(0);
+            color: #fff;
+        }
+
+        .task1-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .task1-image-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #151515;
+            border-radius: 12px;
+            margin: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(100px);
+        }
+
+        .task1-image-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .task1-image-item.hidden {
+            transform: translateY(-100px);
+        }
+
+        .task1-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(48px, 8vw, 120px);
+            font-weight: 900;
+            color: #222;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-radius: 12px;
+        }
+
+        /* TASK 2: Magnetic Button + Smart Ticker */
+        .task2-section {
+            min-height: 100vh;
+            padding: 80px 20px;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 100px;
+        }
+
+        .task2-magnetic-wrap {
+            padding: 100px;
+            border: 1px dashed #333;
+            border-radius: 20px;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .task2-magnetic-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 12px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .task2-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+            background: #fff;
+            color: #000;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            z-index: 10;
+            user-select: none;
+        }
+
+        .task2-ticker-container {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            background: #151515;
+            padding: 30px 0;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+        }
+
+        .task2-ticker-label {
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .task2-ticker-track {
+            display: flex;
+            width: max-content;
+            will-change: transform;
+        }
+
+        .task2-ticker-item {
+            white-space: nowrap;
+            padding: 0 40px;
+            font-size: clamp(32px, 6vw, 64px);
+            font-weight: 800;
+            color: #222;
+        }
+
+        .task2-ticker-item span {
+            color: #fff;
+        }
+
+        /* TASK 3: Adaptive Overlapping Layers */
+        .task3-section {
+            min-height: 100vh;
+            padding: 60px 20px;
+            background: #080808;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .task3-container {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            aspect-ratio: 16/9;
+            max-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .task3-bg {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(80px, 15vw, 200px);
+            font-weight: 900;
+            color: #151515;
+        }
+
+        .task3-photos {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(-60px, -5vw, -20px);
+        }
+
+        .task3-photo {
+            width: clamp(180px, 25vw, 320px);
+            height: clamp(220px, 30vw, 400px);
+            background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 16px;
+            border: 2px solid #222;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), z-index 0s, box-shadow 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(24px, 4vw, 48px);
+            font-weight: 700;
+            color: #333;
+        }
+
+        .task3-photo:nth-child(1) {
+            transform: translateX(-40px) rotate(-5deg);
+        }
+
+        .task3-photo:nth-child(2) {
+            transform: translateX(0) rotate(2deg);
+        }
+
+        .task3-photo:nth-child(3) {
+            transform: translateX(40px) rotate(4deg);
+        }
+
+        .task3-photo:hover {
+            transform: translateX(0) rotate(0) scale(1.08);
+            z-index: 100;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .task3-photo:hover + .task3-photo,
+        .task3-photo:has(+ .task3-photo:hover) {
+            filter: brightness(0.5);
+        }
+
+        .task3-photo:not(:hover) {
+            filter: brightness(0.7);
+        }
+
+        .task3-photo:first-child:hover ~ .task3-photo:nth-child(2),
+        .task3-photo:first-child:hover ~ .task3-photo:nth-child(3) {
+            filter: brightness(0.5);
+        }
+
+        .task3-title {
+            position: absolute;
+            bottom: 5%;
+            font-size: clamp(36px, 8vw, 96px);
+            font-weight: 900;
+            text-align: center;
+            z-index: 10;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Mobile */
+        @media (max-width: 960px) {
+            .task1-sticky {
+                flex-direction: column;
+            }
+
+            .task1-left,
+            .task1-right {
+                width: 100%;
+                height: 50vh;
+            }
+
+            .task1-right {
+                height: 50vh;
+            }
+
+            .task3-container {
+                aspect-ratio: 4/5;
+            }
+
+            .task3-photos {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .task3-photo {
+                width: clamp(140px, 50vw, 200px);
+                height: clamp(180px, 60vw, 260px);
+            }
+
+            .task3-photo:nth-child(1) {
+                transform: translateY(-30px);
+            }
+
+            .task3-photo:nth-child(2) {
+                transform: translateY(-15px);
+            }
+
+            .task3-photo:nth-child(3) {
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .task1-title {
+                font-size: 24px;
+            }
+
+            .task2-btn {
+                padding: 16px 28px;
+                font-size: 14px;
+            }
+        }
+
+        /* Window Container scaling */
+        @media (min-width: 1920px) {
+            .task3-container {
+                transform: scale(1.1);
+                transform-origin: center center;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            height: 30vh;
+            background: #050505;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .footer p {
+            color: #333;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Spacer before -->
+    <div class="spacer">
+        <h2>Scroll down to start</h2>
+    </div>
+
+    <!-- TASK 1: Sticky + Step-by-Step -->
+    <div class="task1-container">
+        <div class="task1-sticky">
+            <div class="task1-left">
+                <h2 class="task1-title" data-step="1">Step One</h2>
+                <h2 class="task1-title" data-step="2">Step Two</h2>
+                <h2 class="task1-title" data-step="3">Step Three</h2>
+            </div>
+            <div class="task1-right">
+                <div class="task1-image-item" data-step="1">
+                    <div class="task1-image-placeholder">01</div>
+                </div>
+                <div class="task1-image-item" data-step="2">
+                    <div class="task1-image-placeholder">02</div>
+                </div>
+                <div class="task1-image-item" data-step="3">
+                    <div class="task1-image-placeholder">03</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spacer between -->
+    <div class="spacer">
+        <h2>Continue scrolling</h2>
+    </div>
+
+    <!-- TASK 2: Magnetic Button + Smart Ticker -->
+    <section class="task2-section">
+        <div>
+            <h3 style="text-align: center; margin-bottom: 40px; color: #555; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Magnetic Button</h3>
+            <div class="task2-magnetic-wrap">
+                <span class="task2-magnetic-label">Hover ~50px</span>
+                <button class="task2-btn">Hover Me</button>
+            </div>
+        </div>
+
+        <div class="task2-ticker-container">
+            <div class="task2-ticker-label">Smart Ticker - Scroll to move</div>
+            <div class="task2-ticker-track">
+                <span class="task2-ticker-item"><span>Zero</span> Block</span>
+                <span class="task2-ticker-item"><span>Custom</span> Code</span>
+                <span class="task2-ticker-item"><span>Tilda</span> Pro</span>
+                <span class="task2-ticker-item"><span>Magnetic</span> Effect</span>
+                <span class="task2-ticker-item"><span>Adaptive</span> Layout</span>
+                <span class="task2-ticker-item"><span>Smooth</span> Scroll</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spacer -->
+    <div class="spacer">
+        <h2>Almost done</h2>
+    </div>
+
+    <!-- TASK 3: Adaptive Overlapping Layers -->
+    <section class="task3-section">
+        <div class="task3-container">
+            <div class="task3-bg">LOGO</div>
+            <div class="task3-photos">
+                <div class="task3-photo">01</div>
+                <div class="task3-photo">02</div>
+                <div class="task3-photo">03</div>
+            </div>
+            <h2 class="task3-title">Title</h2>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Tilda Zero Block Test Complete</p>
+    </footer>
+
+    <script>
+        // TASK 1: Sticky + Step-by-Step (Pure JS, no libraries)
+        (function() {
+            const container = document.querySelector('.task1-container');
+            const sticky = document.querySelector('.task1-sticky');
+            const titles = document.querySelectorAll('.task1-title');
+            const images = document.querySelectorAll('.task1-image-item');
+
+            if (!container || !sticky) return;
+
+            const titleCount = titles.length;
+            let currentStep = 0;
+
+            function updateSteps() {
+                const containerRect = container.getBoundingClientRect();
+                const containerHeight = container.offsetHeight;
+                const viewportHeight = window.innerHeight;
+
+                const scrollProgress = (viewportHeight - containerRect.top) / (containerHeight - viewportHeight);
+                const clampedProgress = Math.max(0, Math.min(1, scrollProgress));
+
+                const newStep = Math.floor(clampedProgress * titleCount);
+
+                if (newStep !== currentStep) {
+                    currentStep = newStep;
+
+                    titles.forEach((title, index) => {
+                        title.classList.toggle('active', index === currentStep);
+                    });
+
+                    images.forEach((img, index) => {
+                        img.classList.remove('visible', 'hidden');
+                        if (index < currentStep) {
+                            img.classList.add('hidden');
+                        } else if (index === currentStep) {
+                            img.classList.add('visible');
+                        }
+                    });
+                }
+            }
+
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        updateSteps();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            updateSteps();
+        })();
+
+        // TASK 2a: Magnetic Button (Vanilla JS)
+        (function() {
+            const btn = document.querySelector('.task2-btn');
+            if (!btn) return;
+
+            const config = {
+                strength: 0.3,
+                returnSpeed: 0.15,
+                hoverRadius: 50
+            };
+
+            let mouseX = 0, mouseY = 0;
+            let btnX = 0, btnY = 0;
+            let targetX = 0, targetY = 0;
+            let currentX = 0, currentY = 0;
+            let is-hovering = false;
+            let rafId = null;
+
+            function handleMouseMove(e) {
+                const rect = btn.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2 + window.scrollX;
+                const centerY = rect.top + rect.height / 2 + window.scrollY;
+
+                const distX = e.clientX + window.scrollX - centerX;
+                const distY = e.clientY + window.scrollY - centerY;
+                const dist = Math.sqrt(distX * distX + distY * distY);
+
+                if (dist < config.hoverRadius) {
+                    is-hovering = true;
+                    targetX = distX * config.strength;
+                    targetY = distY * config.strength;
+                } else {
+                    is-hovering = false;
+                    targetX = 0;
+                    targetY = 0;
+                }
+            }
+
+            function animate() {
+                if (is-hovering) {
+                    currentX += (targetX - currentX) * config.returnSpeed * 2;
+                    currentY += (targetY - currentY) * config.returnSpeed * 2;
+                } else {
+                    currentX += (targetX - currentX) * config.returnSpeed;
+                    currentY += (targetY - currentY) * config.returnSpeed;
+                }
+
+                if (Math.abs(currentX) > 0.01 || Math.abs(currentY) > 0.01) {
+                    btn.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                } else {
+                    btn.style.transform = 'translate(0, 0)';
+                }
+
+                rafId = requestAnimationFrame(animate);
+            }
+
+            document.addEventListener('mousemove', handleMouseMove, { passive: true });
+            animate();
+        })();
+
+        // TASK 2b: Smart Ticker (Vanilla JS)
+        (function() {
+            const track = document.querySelector('.task2-ticker-track');
+            if (!track) return;
+
+            const items = track.querySelectorAll('.task2-ticker-item');
+            if (items.length < 2) return;
+
+            let scrollY = 0;
+            let lastScrollY = 0;
+            let velocity = 0;
+            let position = 0;
+            let targetPosition = 0;
+            let direction = 1;
+            let rafId = null;
+
+            function getTotalWidth() {
+                let width = 0;
+                items.forEach(item => width += item.offsetWidth);
+                return width;
+            }
+
+            function animate() {
+                lastScrollY = scrollY;
+                scrollY = window.scrollY;
+
+                velocity = scrollY - lastScrollY;
+
+                if (Math.abs(velocity) > 0.5) {
+                    direction = velocity > 0 ? -1 : 1;
+                    targetPosition += velocity * 0.5;
+                }
+
+                const trackWidth = track.scrollWidth;
+                const maxOffset = -trackWidth + window.innerWidth;
+
+                if (targetPosition > 0) targetPosition = 0;
+                if (targetPosition < maxOffset) targetPosition = maxOffset;
+
+                position += (targetPosition - position) * 0.1;
+
+                track.style.transform = `translateX(${position}px)`;
+
+                rafId = requestAnimationFrame(animate);
+            }
+
+            animate();
+        })();
+
+        // TASK 3: Already in CSS
+    </script>
+</body>
+</html>

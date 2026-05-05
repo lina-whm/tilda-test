@@ -1,0 +1,133 @@
+<style>
+/* TASK 3: Adaptive Overlapping Layers CSS */
+.t3-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 16/9;
+    max-height: 70vh;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.t3-bg-logo {
+    position: absolute;
+    width: 75%;
+    height: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(64px, 12vw, 160px);
+    font-weight: 900;
+    color: #181818;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0e0e0e 100%);
+    border-radius: 16px;
+}
+
+.t3-photos-row {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(-50px, -4vw, -15px);
+}
+
+.t3-photo {
+    width: clamp(160px, 22vw, 280px);
+    height: clamp(200px, 28vw, 360px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(20px, 3vw, 36px);
+    font-weight: 700;
+    color: #2a2a2a;
+    background: linear-gradient(145deg, #252525 0%, #181818 100%);
+    border-radius: 12px;
+    border: 2px solid #2a2a2a;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    position: relative;
+}
+
+.t3-photo:nth-child(1) { transform: translateX(-35px) rotate(-4deg); z-index: 1; }
+.t3-photo:nth-child(2) { transform: translateX(0) rotate(2deg); z-index: 2; }
+.t3-photo:nth-child(3) { transform: translateX(35px) rotate(5deg); z-index: 3; }
+
+.t3-photo:hover {
+    transform: translateX(0) rotate(0) scale(1.07);
+    z-index: 100;
+    filter: brightness(1) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+}
+
+.t3-photo:not(:hover) {
+    filter: brightness(0.6);
+}
+
+.t3-title {
+    position: absolute;
+    bottom: 8%;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(32px, 6vw, 72px);
+    font-weight: 900;
+    z-index: 10;
+    color: #fff;
+    text-shadow: 0 3px 16px rgba(0, 0, 0, 0.7);
+}
+
+/* Window Container scaling for large screens */
+@media (min-width: 1920px) {
+    .t3-container {
+        transform: scale(1.12);
+        transform-origin: center center;
+    }
+}
+
+/* Tablet */
+@media (max-width: 960px) {
+    .t3-container {
+        aspect-ratio: 4/5;
+        max-height: 65vh;
+    }
+
+    .t3-photos-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .t3-photo {
+        width: clamp(120px, 45vw, 180px);
+        height: clamp(160px, 55vw, 240px);
+    }
+
+    .t3-photo:nth-child(1) { transform: translateY(-25px); }
+    .t3-photo:nth-child(2) { transform: translateY(-12px); }
+    .t3-photo:nth-child(3) { transform: translateY(0); }
+
+    .t3-photo:hover {
+        transform: translateY(0) scale(1.05);
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .t3-container {
+        aspect-ratio: 3/4;
+        max-height: 60vh;
+    }
+
+    .t3-photo {
+        width: clamp(100px, 55vw, 150px);
+        height: clamp(130px, 65vw, 200px);
+    }
+
+    .t3-title {
+        font-size: clamp(24px, 8vw, 48px);
+    }
+}
+</style>

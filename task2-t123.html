@@ -1,0 +1,132 @@
+<style>
+/* TASK 2a: Magnetic Button CSS */
+.t2-magnetic-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+}
+
+.t2-btn-magnetic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 36px;
+    background: #fff;
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    position: relative;
+    z-index: 10;
+}
+
+/* TASK 2b: Smart Ticker CSS */
+.t2-ticker-wrap {
+    overflow: hidden;
+    background: #151515;
+    padding: 24px 0;
+    border-top: 1px solid #252525;
+    border-bottom: 1px solid #252525;
+}
+
+.t2-ticker-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+}
+
+.t2-ticker-text {
+    white-space: nowrap;
+    padding: 0 32px;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 700;
+    color: #252525;
+}
+
+.t2-ticker-text span {
+    color: #fff;
+}
+</style>
+
+<script>
+// TASK 2a: Magnetic Button JS
+(function() {
+    const btn = document.querySelector('.t2-btn-magnetic');
+    if (!btn) return;
+
+    const cfg = { strength: 0.35, returnSpeed: 0.12, radius: 50 };
+    let mx = 0, my = 0, tx = 0, ty = 0, cx = 0, cy = 0;
+    let active = false, raf = null;
+
+    function move(e) {
+        const r = btn.getBoundingClientRect();
+        const cx2 = r.left + r.width / 2;
+        const cy2 = r.top + r.height / 2;
+        const dx = e.clientX - cx2;
+        const dy = e.clientY - cy2;
+        const d = Math.sqrt(dx * dx + dy * dy);
+
+        if (d < cfg.radius) {
+            active = true;
+            tx = dx * cfg.strength;
+            ty = dy * cfg.strength;
+        } else {
+            active = false;
+            tx = 0;
+            ty = 0;
+        }
+    }
+
+    function anim() {
+        cx += (tx - cx) * (active ? cfg.returnSpeed * 2.5 : cfg.returnSpeed);
+        cy += (ty - cy) * (active ? cfg.returnSpeed * 2.5 : cfg.returnSpeed);
+
+        if (Math.abs(cx) > 0.1 || Math.abs(cy) > 0.1) {
+            btn.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
+        } else {
+            btn.style.transform = 'none';
+        }
+        raf = requestAnimationFrame(anim);
+    }
+
+    document.addEventListener('mousemove', move, { passive: true });
+    anim();
+})();
+
+// TASK 2b: Smart Ticker JS
+(function() {
+    const track = document.querySelector('.t2-ticker-track');
+    if (!track) return;
+
+    const texts = track.querySelectorAll('.t2-ticker-text');
+    if (texts.length < 2) return;
+
+    let lastY = 0, curY = 0, vel = 0, pos = 0, tgt = 0, dir = 1;
+    let raf = null;
+
+    function anim() {
+        lastY = curY;
+        curY = window.scrollY;
+        vel = curY - lastY;
+
+        if (Math.abs(vel) > 0.3) {
+            dir = vel > 0 ? -1 : 1;
+            tgt += vel * 0.4;
+        }
+
+        const maxW = -(track.scrollWidth - window.innerWidth);
+        tgt = Math.max(maxW, Math.min(0, tgt));
+        pos += (tgt - pos) * 0.08;
+
+        track.style.transform = 'translateX(' + pos.toFixed(1) + 'px)';
+        raf = requestAnimationFrame(anim);
+    }
+
+    anim();
+})();
+</script>
